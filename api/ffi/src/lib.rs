@@ -282,6 +282,27 @@ pub unsafe extern "C" fn tract_onnx_model_for_path(
     })
 }
 
+/// Parse and load an ONNX model as a tract InferenceModel.
+///
+/// `raw` is the raw binary data of the `.onnx` file to be loaded.
+/// `size` is the size of the raw binary pointer in bytes.
+#[no_mangle]
+pub unsafe extern "C" fn tract_onnx_model_for_read(
+    onnx: *const TractOnnx,
+    raw: *const c_char,
+    size: usize,
+    model: *mut *mut TractInferenceModel,
+) -> TRACT_RESULT {
+    wrap(|| unsafe {
+        check_not_null!(onnx, raw, model);
+        *model = std::ptr::null_mut();
+        let mut slice = std::slice::from_raw_parts(raw as *const u8, size);
+        let m = Box::new(TractInferenceModel((*onnx).0.model_for_read(&mut slice)?));
+        *model = Box::into_raw(m);
+        Ok(())
+    })
+}
+
 // INFERENCE MODEL
 pub struct TractInferenceModel(tract_rs::InferenceModel);
 

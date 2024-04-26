@@ -90,6 +90,9 @@ impl OnnxInterface for Onnx {
     fn model_for_path(&self, path: impl AsRef<Path>) -> Result<Self::InferenceModel> {
         Ok(InferenceModel(self.0.model_for_path(path)?))
     }
+    fn model_for_read(&self, r: &mut dyn std::io::Read) -> Result<Self::InferenceModel> {
+        Ok(InferenceModel(self.0.model_for_read(r)?))
+    }
 }
 
 pub struct InferenceModel(tract_onnx::prelude::InferenceModel);

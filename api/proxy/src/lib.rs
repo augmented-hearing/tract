@@ -127,6 +127,14 @@ impl OnnxInterface for Onnx {
         check!(sys::tract_onnx_model_for_path(self.0, path.as_ptr(), &mut model))?;
         Ok(InferenceModel(model))
     }
+    fn model_for_read(&self, r: &mut dyn std::io::Read) -> Result<InferenceModel> {
+        let mut buffer = Vec::new();
+        r.read_to_end(&mut buffer)?;
+        let raw = buffer.as_ptr() as *const i8;
+        let mut model = null_mut();
+        check!(sys::tract_onnx_model_for_read(self.0, raw, buffer.len(), &mut model))?;
+        Ok(InferenceModel(model))
+    }
 }
 
 // INFERENCE MODEL

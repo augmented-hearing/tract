@@ -169,6 +169,17 @@ enum TRACT_RESULT tract_onnx_model_for_path(const struct TractOnnx *onnx,
                                             struct TractInferenceModel **model);
 
 /**
+ * Parse and load an ONNX model as a tract InferenceModel.
+ *
+ * `raw` is the raw binary data of the `.onnx` file to be loaded.
+ * `size` is the size of the raw binary pointer in bytes.
+ */
+enum TRACT_RESULT tract_onnx_model_for_read(const struct TractOnnx *onnx,
+                                            const char *raw,
+                                            uintptr_t size,
+                                            struct TractInferenceModel **model);
+
+/**
  * Query an InferenceModel input counts.
  */
 enum TRACT_RESULT tract_inference_model_input_count(const struct TractInferenceModel *model,
